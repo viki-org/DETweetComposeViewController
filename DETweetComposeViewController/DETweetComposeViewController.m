@@ -27,7 +27,7 @@
 #import "UIDevice+DETweetComposeViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import <Accounts/Accounts.h>
-#import <Twitter/TWRequest.h>
+#import <Social/Social.h>
 
 
 static BOOL waitingForAccess = NO;
@@ -125,8 +125,7 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
         ACAccountType *twitterAccountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
         
         __block BOOL accessGranted = NO;
-        [accountStore requestAccessToAccountsWithType:twitterAccountType
-                                withCompletionHandler:^(BOOL granted, NSError *error) {
+        [accountStore requestAccessToAccountsWithType:twitterAccountType options:nil completion:^(BOOL granted, NSError *error) {
                                     accessGranted = granted;
                                     waitingForAccess = NO;
                                 }];
@@ -1008,7 +1007,7 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
 - (void)tweetFailedAuthentication:(DETweetPoster *)tweetPoster
 {
     [OAuth clearCrendentials];
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
     
     [[[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Cannot Send Tweet", @"")
                                  message:NSLocalizedString(@"Unable to login to Twitter with existing credentials. Try again with new credentials.", @"")
@@ -1033,7 +1032,7 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
         self.completionHandler(DETweetComposeViewControllerResultDone);
     }
     else {
-        [self dismissModalViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
 
@@ -1066,7 +1065,7 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
         self.completionHandler(DETweetComposeViewControllerResultCancelled);
     }
     else {
-        [self dismissModalViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
 
@@ -1084,7 +1083,7 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
     // This gets called if there's an error sending the tweet.
 {
     if (alertView.tag == DETweetComposeViewControllerNoAccountsAlert) {
-        [self dismissModalViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
     else if (alertView.tag == DETweetComposeViewControllerCannotSendAlert) {
         if (buttonIndex == 1) {
@@ -1107,7 +1106,7 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
 - (void)twitterDidNotLogin:(BOOL)cancelled
 {
         // Oddly this is not an optional method in the protocol.
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
