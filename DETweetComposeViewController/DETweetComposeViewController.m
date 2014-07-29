@@ -220,6 +220,7 @@ static NSString * const DETweetLastAccountIdentifier = @"DETweetLastAccountIdent
             imageOrientation = UIImageOrientationDown;
             break;
         default:
+            imageOrientation = UIImageOrientationUp;
             break;
     }
     
